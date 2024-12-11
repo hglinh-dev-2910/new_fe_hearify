@@ -1,35 +1,32 @@
 package registerView
 
-import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.background
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.border
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.new_fe_hearify.R
 
 
@@ -51,6 +48,8 @@ fun RegistrationScreen() {
     var soDienThoai by remember { mutableStateOf("") }
     var soCanCuoc by remember { mutableStateOf("") }
 
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,50 +61,59 @@ fun RegistrationScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) { // Canh giữa theo chiều dọc
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = null,
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.weight(1f) // Image chiếm 1 phần không gian
             )
-            Spacer(modifier = Modifier.width(8.dp)) // Thêm khoảng cách giữa Image và Box
+            Spacer(modifier = Modifier.width(8.dp))
             Box(
                 Modifier
                     .background(colorResource(R.color.white))
-                    .padding(8.dp) // Thêm padding để Box lớn hơn text
+                    .padding(8.dp)
+                    .weight(2f) // Box chiếm 2 phần không gian
             ) {
                 Text(
                     text = "Thông tin",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.black),
-                    modifier = Modifier.align(Alignment.Center) // Canh giữa text trong Box
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Sử dụng hàm CustomTextField
         CustomTextField(
             placeholder = "Họ và tên của bạn",
             value = hoTen,
-            onValueChange = { hoTen = it })
+            onValueChange = { hoTen = it },
+            focusManager = focusManager
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         CustomTextField(
             placeholder = "Giới tính",
             value = gioiTinh,
-            onValueChange = { gioiTinh = it })
+            onValueChange = { gioiTinh = it },
+            focusManager = focusManager
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         CustomTextField(
             placeholder = "Ngày sinh",
             value = ngaySinh,
-            onValueChange = { ngaySinh = it })
+            onValueChange = { ngaySinh = it },
+            focusManager = focusManager
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -113,7 +121,8 @@ fun RegistrationScreen() {
             placeholder = "Số điện thoại",
             value = soDienThoai,
             onValueChange = { soDienThoai = it },
-            keyboardType = KeyboardType.Phone
+            keyboardType = KeyboardType.Phone,
+            focusManager = focusManager
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -122,11 +131,11 @@ fun RegistrationScreen() {
             placeholder = "Số căn cước công dân",
             value = soCanCuoc,
             onValueChange = { soCanCuoc = it },
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Number,
+            focusManager = focusManager
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
 
         Button(
             onClick = { /* TODO: Handle registration */ },
@@ -135,8 +144,24 @@ fun RegistrationScreen() {
                 containerColor = colorResource(id = R.color.app_name_color)
             )
         ) {
-            Text("Đăng ký", color = White)
+            Text("Đăng ký", color = colorResource(R.color.white))
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Chúng tôi sẽ không bao giờ chia sẻ bất cứ điều gì nếu không có sự cho phép của bạn",
+            fontSize = 12.sp,
+            color = Color.Gray
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Bằng cách Đăng ký, bạn đồng ý với Điều khoản và Điều kiện của chúng tôi. Tìm hiểu cách chúng tôi sử dụng dữ liệu của bạn trong Chính sách bảo mật của chúng tôi",
+            fontSize = 12.sp,
+            color = Color.Gray
+        )
     }
 }
 
@@ -146,7 +171,8 @@ fun CustomTextField(
     placeholder: String,
     value: String,
     onValueChange: (String) -> Unit,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    focusManager: androidx.compose.ui.focus.FocusManager
 ) {
     TextField(
         value = value,
@@ -163,7 +189,8 @@ fun CustomTextField(
             imeAction = ImeAction.Next
         ),
         keyboardActions = KeyboardActions(
-            onNext = { /* TODO: Focus on the next field */ }
+            onNext = { focusManager.moveFocus(FocusDirection.Down) },
+            onDone = { focusManager.clearFocus() }
         )
     )
 }
