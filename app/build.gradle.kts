@@ -54,6 +54,14 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
 
+    implementation(libs.gms.play.services.auth)
+    implementation(libs.play.services.identity)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.gson)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.credentials.play.services.auth)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -68,4 +76,5 @@ dependencies {
     implementation(libs.ktor.client.okhttp) //ktor client
     implementation(libs.ktor.client.serialization)
     implementation(libs.kotlinx.serialization.json)
+
 }

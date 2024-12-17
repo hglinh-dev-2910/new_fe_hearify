@@ -1,4 +1,4 @@
-package com.example.new_fe_hearify
+package com.example.new_fe_hearify.view.loginView
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -38,11 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
+import com.example.new_fe_hearify.R
 
 
 @Composable
 fun LoginConstraint(
+    //navController: NavHostController,
     @DrawableRes logo: Int, //logo app
     modifier: Modifier = Modifier
         .fillMaxSize()
@@ -110,7 +111,7 @@ fun LoginConstraint(
             start.linkTo(parent.start, margin = 40.dp)
             end.linkTo(parent.end, margin = 40.dp)
         }) {
-
+            //navController.navigate("dashboard")
         }
 
         //gg
@@ -223,18 +224,12 @@ fun JWTauth(modifier: Modifier = Modifier, text1: String, text2: String) {
                 )
             )
         }
-
-
     }
 }
 
 
-
-
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
-fun LoginLayoutPreview() {
-   New_fe_hearifyTheme {
-       LoginConstraint(R.drawable.logo,Modifier)
-   }
+fun LoginViewPreview() {
+    LoginConstraint(R.drawable.logo, Modifier)
 }
