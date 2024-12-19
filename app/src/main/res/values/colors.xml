@@ -7,9 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="app_name_color">#FA8072</color>
+    <color name="app_name_color">#FFE1EA</color>
     <color name="login_background">#E083A2</color>
-    <color name="container_background">#36B3C9</color>
+    <color name="container_background">#E06792</color>
     <color name="unfocused_container_background">#C93667</color>
     <color name="field_white">#FFE0E0E0</color>
+    <color name="text_button">#f82e4b</color>
 </resources>
