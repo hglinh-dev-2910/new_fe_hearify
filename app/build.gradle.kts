@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
+    implementation(libs.androidx.foundation.layout)
+    implementation(libs.androidx.foundation.layout.android)
 
 
     testImplementation(libs.junit)
