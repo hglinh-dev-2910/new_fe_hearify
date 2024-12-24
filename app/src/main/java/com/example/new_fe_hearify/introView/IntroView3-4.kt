@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.new_fe_hearify.R
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun Intro34Screen(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize()) {
         // Background image
         Image(
@@ -110,5 +110,5 @@ fun MainScreen(modifier: Modifier = Modifier) {
 @Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen()
+    Intro34Screen()
 }
