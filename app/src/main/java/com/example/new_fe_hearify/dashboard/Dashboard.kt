@@ -77,7 +77,7 @@ fun DashboardScreen() {
                 // Icon trái tim
                 IconButton(onClick = { /* Xử lý sự kiện */ }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_heart), // Thay bằng icon trái tim
+                        painter = painterResource(id = R.drawable.Heart), // Thay bằng icon trái tim
                         contentDescription = "Heart",
                         tint = Color.Red // Màu đỏ cho icon
                     )
@@ -108,7 +108,7 @@ fun DashboardScreen() {
                 Text("Đã Match bạn", color = Color.Red)
                 Spacer(modifier = Modifier.weight(1f)) // Đẩy icon sang phải
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_heart), // Thay bằng icon trái tim
+                    painter = painterResource(id = R.drawable.anhtuyet), // Thay bằng icon trái tim
                     contentDescription = "Heart",
                     tint = Color.Red // Màu đỏ cho icon
                 )
@@ -127,7 +127,7 @@ fun DashboardScreen() {
                 Text("Danh sách ghép đôi", color = Color.Red)
                 Spacer(modifier = Modifier.weight(1f)) // Đẩy icon sang phải
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_heart), // Thay bằng icon trái tim
+                    painter = painterResource(id = R.drawable.Heart), // Thay bằng icon trái tim
                     contentDescription = "Heart",
                     tint = Color.Red // Màu đỏ cho icon
                 )
