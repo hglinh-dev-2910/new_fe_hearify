@@ -18,7 +18,7 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.New_fe_hearify">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.inte7nt.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

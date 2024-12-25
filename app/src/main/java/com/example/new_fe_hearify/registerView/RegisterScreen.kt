@@ -92,7 +92,7 @@ fun RegistrationScreen() {
                     text = "Thông tin",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = colorResource(id = R.color.black),
+                    color = colorResource(id = R.color.black), //gọi resource
                     modifier = Modifier.align(Alignment.Center) // Canh giữa text trong Box
                 )
             }
