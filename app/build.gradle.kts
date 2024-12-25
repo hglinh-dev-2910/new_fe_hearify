@@ -2,11 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.22"
 }
-
-
-
 
 android {
     namespace = "com.example.new_fe_hearify"
@@ -57,18 +53,6 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.ktor.client.cio)
-
-    implementation(libs.ktor.client.serialization.jvm)
-
-    implementation(libs.jetbrains.kotlinx.serialization.json)
-    implementation(libs.androidx.runtime.livedata)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
 
 
     testImplementation(libs.junit)
@@ -84,12 +68,4 @@ dependencies {
     implementation(libs.ktor.client.okhttp) //ktor client
     implementation(libs.ktor.client.serialization)
     implementation(libs.kotlinx.serialization.json)
-
-    //implement retrofit for BE request
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
-
-
 }
-
