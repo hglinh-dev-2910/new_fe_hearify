@@ -27,6 +27,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,7 +45,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import com.example.new_fe_hearify.R
+import com.example.new_fe_hearify.viewModel.AuthViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -58,13 +62,16 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen(
+    viewModel: AuthViewModel = viewModel()
+) {
+
     var hoTen by remember { mutableStateOf("") }
     var gioiTinh by remember { mutableStateOf("") }
     var ngaySinh by remember { mutableStateOf("") }
     var soDienThoai by remember { mutableStateOf("") }
     var soCanCuoc by remember { mutableStateOf("") }
-
+    val registrationResult by viewModel.registrationResult.observeAsState(null)
     Column(
         modifier = Modifier
             .fillMaxSize()
