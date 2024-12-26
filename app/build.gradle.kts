@@ -53,6 +53,12 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
+    implementation(libs.gms.play.services.auth)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.gson)
+    implementation(libs.ktor.serialization.kotlinx.json)
 
 
     testImplementation(libs.junit)
