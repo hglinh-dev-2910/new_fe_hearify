@@ -45,18 +45,8 @@ fun MessageScreen(messages: List<Messages>, currentUser: String, receiver: Strin
         TopAppBar(
             title = { Text(receiver, fontWeight = FontWeight.Bold) },
             actions = {
-                IconButton(onClick = { /* Handle video call */ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your video call icon
-                        contentDescription = "Video Call"
-                    )
-                }
-                IconButton(onClick = { /* Handle voice call */ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your voice call icon
-                        contentDescription = "Voice Call"
-                    )
-                }
+
+
             },
             navigationIcon = {
                 IconButton(onClick = { /* Handle back navigation */ }) {
