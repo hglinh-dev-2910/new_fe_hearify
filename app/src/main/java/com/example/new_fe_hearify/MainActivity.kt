@@ -17,6 +17,9 @@ import com.example.new_fe_hearify.dashboard.DashboardScreen
 import com.example.new_fe_hearify.introView.Intro1Screen
 import com.example.new_fe_hearify.introView.Intro34Screen
 import com.example.new_fe_hearify.loginView.Login2Screen
+import com.example.new_fe_hearify.message.ChattingScreen
+import com.example.new_fe_hearify.message.MessageListScreen
+import com.example.new_fe_hearify.message.Messages
 import com.example.new_fe_hearify.registerView.RegistrationScreen
 import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
 import com.example.new_fe_hearify.viewModel.AuthViewModel
@@ -48,16 +51,31 @@ fun MainApp(navController: NavHostController) {
             Intro34Screen(Modifier, navController)
         }
         composable("login1view") {
-            Login1Screen( Modifier, navController)
+            Login1Screen(Modifier, navController)
         }
         composable("login2view") {
             Login2Screen(Modifier, navController)
         }
         composable("registerview") {
-            RegistrationScreen(viewModel = AuthViewModel(),Modifier, navController)
+            RegistrationScreen(viewModel = AuthViewModel(), Modifier, navController)
         }
         composable("dashboard") {
             DashboardScreen()
+        }
+        // Add this composable route for the MessageListScreen
+        composable("messagelistview/{currentUser}") { backStackEntry ->
+            val currentUser = backStackEntry.arguments?.getString("currentUser") ?: ""
+            // You'll need to fetch the messages here and pass them to MessageListScreen
+            val messages = listOf<Messages>( /* Fetch your messages here */ )
+            MessageListScreen(navController, messages, currentUser)
+        }
+        // Modify this composable route for ChattingScreen to accept arguments
+        composable("chattingview/{currentUser}/{receiver}") { backStackEntry ->
+            val currentUser = backStackEntry.arguments?.getString("currentUser") ?: ""
+            val receiver = backStackEntry.arguments?.getString("receiver") ?: ""
+            // You'll need to fetch the messages here and pass them to ChattingScreen
+            val messages = listOf<Messages>( /* Fetch your messages here */ )
+            ChattingScreen(navController, messages, currentUser, receiver)
         }
     }
 }
