@@ -17,9 +17,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.new_fe_hearify.R
+import com.example.new_fe_hearify.editprofile.ProfileEditingScreen
 
 //class MainActivity : ComponentActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +79,7 @@ fun DashboardScreen() {
                 // Icon trái tim
                 IconButton(onClick = { /* Xử lý sự kiện */ }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.Heart), // Thay bằng icon trái tim
+                        painter = painterResource(id = R.drawable.heart), // Thay bằng icon trái tim
                         contentDescription = "Heart",
                         tint = Color.Red // Màu đỏ cho icon
                     )
@@ -127,11 +129,18 @@ fun DashboardScreen() {
                 Text("Danh sách ghép đôi", color = Color.Red)
                 Spacer(modifier = Modifier.weight(1f)) // Đẩy icon sang phải
                 Icon(
-                    painter = painterResource(id = R.drawable.Heart), // Thay bằng icon trái tim
+                    painter = painterResource(id = R.drawable.heart), // Thay bằng icon trái tim
                     contentDescription = "Heart",
                     tint = Color.Red // Màu đỏ cho icon
                 )
             }
         }
     }
+}
+
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun dashboard() {
+    DashboardScreen()
 }
