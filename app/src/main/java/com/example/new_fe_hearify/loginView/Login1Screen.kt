@@ -17,15 +17,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login1Screen(modifier: Modifier = Modifier) {  // Changed to Login1Screen
+fun Login1Screen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF2DEDE)) // Set background color
+            .background(Color(0xFFF2DEDE))
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -44,7 +49,7 @@ fun Login1Screen(modifier: Modifier = Modifier) {  // Changed to Login1Screen
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("login2view") }, // Navigate to LoginView2
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
@@ -53,7 +58,7 @@ fun Login1Screen(modifier: Modifier = Modifier) {  // Changed to Login1Screen
                 Text("Đăng nhập", color = Color.Red)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("registerview") }, // Navigate to RegisterView
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp),
@@ -102,7 +107,7 @@ fun Login1Screen(modifier: Modifier = Modifier) {  // Changed to Login1Screen
         Button(
             onClick = { /*TODO*/ },
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998)) // Facebook blue
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998))
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
@@ -140,6 +145,6 @@ fun Login1Screen(modifier: Modifier = Modifier) {  // Changed to Login1Screen
 @Composable
 fun Login1LayoutPreview() {
     New_fe_hearifyTheme {
-        Login1Screen(Modifier)  // Changed to Login1Screen
+        Login1Screen(Modifier, rememberNavController())
     }
 }

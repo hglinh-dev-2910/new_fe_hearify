@@ -49,21 +49,17 @@ import androidx.lifecycle.ViewModel
 import com.example.new_fe_hearify.R
 import com.example.new_fe_hearify.viewModel.AuthViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            RegistrationScreen()
-        }
-    }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
-    viewModel: AuthViewModel = viewModel()
+    viewModel: AuthViewModel = viewModel(),
+    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
 
     var hoTen by remember { mutableStateOf("") }
@@ -189,8 +185,3 @@ fun CustomTextField(
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    RegistrationScreen()
-}

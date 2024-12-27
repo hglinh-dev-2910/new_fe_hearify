@@ -22,10 +22,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
 
 @Composable
-fun Login2Screen(modifier: Modifier = Modifier) {
+fun Login2Screen(modifier: Modifier = Modifier,
+                 navController: NavHostController
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -159,10 +162,10 @@ fun JWTauth(modifier: Modifier = Modifier, text1: String, text2: String) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun LoginLayoutPreview() {
-    New_fe_hearifyTheme {
-        Login2Screen(Modifier)
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun LoginLayoutPreview() {
+//    New_fe_hearifyTheme {
+//        Login2Screen(Modifier)
+//    }
+//}
