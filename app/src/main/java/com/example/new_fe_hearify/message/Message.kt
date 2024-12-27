@@ -32,60 +32,6 @@ import java.time.format.DateTimeFormatter
 
 
 
-@Composable
-fun MessageCardList(message: Messages, currentUser: String) {
-    val isCurrentUser = message.senderId == currentUser
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
-    ) {
-        if (!isCurrentUser) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(R.drawable.ic_launcher_foreground),
-                    contentDescription = "Avatar",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = message.senderId, fontWeight = FontWeight.Bold)
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-        }
-
-        Card(
-            modifier = Modifier.widthIn(max = 300.dp), // Limit the width of the message bubble
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isCurrentUser) Color(0xFFE0F7FA) else Color(0xFFF0F0F0)
-            )
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = message.message,
-                    modifier = Modifier
-                        .background(
-                            color = Color.Transparent, // No need for additional background
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                )
-
-                Text(
-                    text = message.timestamp,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
