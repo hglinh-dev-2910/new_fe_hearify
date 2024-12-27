@@ -1,8 +1,5 @@
 package com.example.new_fe_hearify.message
 
-import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,12 +7,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,156 +23,99 @@ import com.example.new_fe_hearify.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-data class Messages(
-    val senderId: String,
-    val receiverId: String,
-    val message: String,
-    val timestamp: String,
+data class Message(
+    val sender: String,
+    val text: String,
+    val time: LocalDateTime = LocalDateTime.now(), // Thời gian mặc định là hiện tại
+    val isUser: Boolean = false // Mặc định là tin nhắn của người khác
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MessageScreen(messages: List<Messages>, currentUser: String, receiver: String) {
-    var inputText by remember { mutableStateOf("") }
-    var messageList by remember { mutableStateOf(messages) }
+fun MessageScreen() {
+    val messages = listOf(
+        Message("Như", "Anh tìm gì trên này? :)"),
+        Message("Kim", "Dung"),
+        Message("Cậu", "sinh năm bao nhiuuuu"),
+        Message("The", "hóa ra người đẹp cũng biết buồn", time = LocalDateTime.now().minusDays(1)), // Tin nhắn cũ hơn 1 ngày
+        Message("Tôi", "Chào bạn", isUser = true) // Tin nhắn của người dùng hiện tại
+    )
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Top Bar
-        TopAppBar(
-            title = { Text(receiver, fontWeight = FontWeight.Bold) },
-            actions = {
-                IconButton(onClick = { /* Handle video call */ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your video call icon
-                        contentDescription = "Video Call"
-                    )
-                }
-                IconButton(onClick = { /* Handle voice call */ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your voice call icon
-                        contentDescription = "Voice Call"
-                    )
-                }
-            },
-            navigationIcon = {
-                IconButton(onClick = { /* Handle back navigation */ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your back arrow icon
-                        contentDescription = "Back"
-                    )
-                }
-            }
-        )
-
-        // Messages
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(16.dp)
-        ) {
-            items(messageList) { message ->
-                MessageCard(message, currentUser)
-            }
-        }
-
-        // Input Area
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = { /* Handle image attachment */ }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your attach image icon
-                    contentDescription = "Attach Image"
-                )
-            }
-            TextField(
-                value = inputText,
-                onValueChange = { inputText = it },
-                placeholder = { Text("Type your message") },
-                modifier = Modifier.weight(1f)
-            )
-            IconButton(onClick = {
-                if (inputText.isNotBlank()) {
-                    val newMessage = Messages(
-                        senderId = currentUser,
-                        receiverId = receiver,
-                        message = inputText,
-                        timestamp = LocalDateTime.now()
-                            .format(DateTimeFormatter.ofPattern("hh:mm a"))
-                    )
-                    messageList = messageList + newMessage
-                    inputText = ""
-                }
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your send message icon
-                    contentDescription = "Send Message"
-                )
-            }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        reverseLayout = true // Đảo ngược danh sách để tin nhắn mới nhất ở dưới cùng
+    ) {
+        items(messages) { message ->
+            MessageItem(message)
         }
     }
 }
 
 @Composable
-fun MessageCard(message: Messages, currentUser: String) {
-    val isCurrentUser = message.senderId == currentUser
-
-    Row(
+fun MessageItem(message: Message) {
+    val formatter = DateTimeFormatter.ofPattern("HH:mm") // Định dạng thời gian
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
+            .padding(vertical = 4.dp),
+        horizontalAlignment = if (message.isUser) Alignment.End else Alignment.Start
     ) {
-        if (!isCurrentUser) {
-            Image(
-                painter = painterResource(R.drawable.ic_launcher_foreground), // Replace with your user avatar
-                contentDescription = "Avatar",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-        }
-
-        Column {
+        // Hiển thị tên người gửi nếu là tin nhắn đầu tiên trong nhóm
+        if (message.isUser) {
             Text(
-                text = message.message,
-                modifier = Modifier
-                    .background(
-                        color = if (isCurrentUser) Color.Green else Color.LightGray,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .padding(8.dp)
-            )
-
-            Text(
-                text = message.timestamp,
+                text = message.sender,
+                fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 color = Color.Gray
             )
         }
+
+        Row(
+            verticalAlignment = Alignment.Bottom
+        ) {
+            if (!message.isUser) { // Chỉ hiển thị ảnh đại diện nếu không phải tin nhắn của người dùng
+                Image(
+                    painter = painterResource(id = R.drawable.messavar), // Thay thế bằng ảnh đại diện thực tế
+                    contentDescription = "avatar",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+
+            // Khung tin nhắn
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = if (message.isUser) Color.Green else Color.LightGray,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = message.text,
+                    fontSize = 16.sp,
+                    color = if (message.isUser) Color.White else Color.Black
+                )
+            }
+        }
+
+        // Hiển thị thời gian
+        Text(
+            text = message.time.format(formatter),
+            fontSize = 12.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 2.dp)
+        )
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
+@Preview (showBackground = true)
 @Composable
-fun MessageScreenPreview() {
-    MessageScreen(
-        messages = listOf(
-            Messages("user1", "user2", "Hiii - tớ 2k4, mình làm quen nhoeeee", "01:25 PM"),
-            Messages("user2", "user1", "Chào cậu, tớ cũng 2k4 <3", "01:25 PM"),
-            Messages("user1", "user2", "Cuối tuần này cậu đi xem phim không?? đợi bên học yêu", "01:25 PM"),
-            Messages("user2", "user1", "Được chứ", "01:25 PM"),
-            Messages("user2", "user1", "Anh tìm gì trên này thế? :)", "01:25 PM"),
-        ),
-        currentUser = "user2",
-        receiver = "user1"
-    )
+fun MessengerPreview(modifier: Modifier = Modifier) {
+    MessageScreen()
+    
 }

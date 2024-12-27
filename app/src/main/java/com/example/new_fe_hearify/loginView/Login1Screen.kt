@@ -49,7 +49,9 @@ fun Login1Screen(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Button(
-                onClick = { navController.navigate("login2view") }, // Navigate to LoginView2
+                onClick = {
+                    navController.navigate("login2view")
+                          }, // Navigate to LoginView2
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
@@ -67,77 +69,8 @@ fun Login1Screen(
                 Text("Đăng ký", color = Color.Red)
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Guest Button
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, Color.White, RoundedCornerShape(4.dp)),
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.container_background))
-        ) {
-            Text("Khách", color = Color.Red)
-        }
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Or
-        Text("Or", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Google Login
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.google_logo), // Replace with Google logo
-                    contentDescription = "Google Logo",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Đăng nhập với tài khoản Google", color = Color.Black)
-            }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Facebook Login
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998))
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.facebook_logo), // Replace with Facebook logo
-                    contentDescription = "Facebook Logo",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Tiếp tục với Facebook", color = Color.White)
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Terms Text
-        Text(
-            text = "Chúng tôi sẽ không bao giờ chia sẻ bất cứ điều gì\n" +
-                    "mà không có sự cho phép của bạn.",
-            textAlign = TextAlign.Center,
-            color = Color.Gray,
-            fontSize = 12.sp
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Bằng cách đăng ký, bạn đồng ý với Điều khoản và Điều\n" +
-                    "kiện của chúng tôi. Bạn cũng xác nhận rằng bạn\n" +
-                    "đã đọc Chính sách cách bảo mật thông tin của chúng tôi.",
-            textAlign = TextAlign.Center,
-            color = Color.Gray,
-            fontSize = 12.sp
-        )
     }
 }
 

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +34,7 @@ fun ProfileScreen(
     location: String,
     education: String,
     children: String,
+    onBackClick: () -> Unit // Add this for the back button click
 ) {
     Box(
         modifier = modifier
@@ -60,17 +60,19 @@ fun ProfileScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(12.dp)
         ) {
-            // "Quay lại" text with offset
-            Text(
-                text = "Quay lại",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .offset(y = 60.dp)
-            )
+            // "Quay lại" button
+            Button(
+                onClick = onBackClick, // Use the provided lambda
+                modifier = Modifier.padding(top = 60.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Transparent,
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Quay lại", fontWeight = FontWeight.Bold)
+            }
 
             // Information boxes with spacing
             Spacer(modifier = Modifier.height(220.dp))
@@ -139,6 +141,7 @@ fun ProfileScreenPreview() {
         description = "Vào một ngày đẹp trời, từ hai con người xa lạ - chúng ta sẽ hòa làm một <3",
         location = "Đang ở Thành phố Hồ Chí Minh",
         education = "Học tại Trường Đại học Khoa học tự nhiên, ĐHQG-HCM",
-        children = "Chưa có con"
+        children = "Chưa có con",
+        onBackClick = { /* Handle back button click here */ }
     )
 }
