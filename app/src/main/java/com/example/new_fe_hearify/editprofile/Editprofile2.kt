@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import android.provider.MediaStore
+import com.example.new_fe_hearify.registerView.RegistrationScreen
 
 /* ... (MessageScreen và MessageItem từ câu trả lời trước) */
 
@@ -60,7 +61,7 @@ fun ProfileEditingScreen() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(0.dp)
             .background(screenBackgroundColor) // Áp dụng màu nền cho screen
 
     ) {
@@ -209,6 +210,6 @@ fun getBitmapFromUri(context: android.content.Context, uri: Uri): Bitmap? {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ProfileEditingScreen() {
-    EditProfileScreen()
+fun DefaultPreview() {
+    ProfileEditingScreen()
 }
