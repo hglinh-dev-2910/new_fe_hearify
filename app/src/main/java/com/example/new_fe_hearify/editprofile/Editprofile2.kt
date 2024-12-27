@@ -19,13 +19,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-//import coil.compose.AsyncImage
-//import coil.request.ImageRequest
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.new_fe_hearify.R
-import com.example.new_fe_hearify.registerView.RegistrationScreen
 
 // ... (MessageScreen và MessageItem từ câu trả lời trước)
 
@@ -33,7 +31,6 @@ import com.example.new_fe_hearify.registerView.RegistrationScreen
 fun ProfileEditingScreen() {
     var name by remember { mutableStateOf("Minh") }
     var age by remember { mutableStateOf(20) }
-    var find by remember { mutableStateOf("MQH khong rang buoc") }
     var bio by remember { mutableStateOf("Thích hải sản thì phải ăn ghẹ\nThích làm mẹ thì hãy ăn anh") }
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
 
@@ -44,17 +41,11 @@ fun ProfileEditingScreen() {
         uris?.let { selectedImages = it }
     }
 
-    // Màu nền cho screen
-    val screenBackgroundColor = Color(0xFFFFE1EA)
-    // Màu nền cho các box
-    val boxBackgroundColor = Color(0xFFFABDCF)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(0.dp)
-            .background(screenBackgroundColor)
+            .padding(16.dp)
     ) {
         Text(
             text = "Chỉnh sửa hồ sơ",
@@ -73,9 +64,7 @@ fun ProfileEditingScreen() {
             value = bio,
             onValueChange = { bio = it },
             label = { Text("Bio") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(boxBackgroundColor)
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -85,27 +74,14 @@ fun ProfileEditingScreen() {
             value = name,
             onValueChange = { name = it },
             label = { Text("Tên") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(boxBackgroundColor)
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = age.toString(),
             onValueChange = { age = it.toIntOrNull() ?: 0 },
             label = { Text("Độ tuổi") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(boxBackgroundColor)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = find.toString(),
-            onValueChange = { age = it.toIntOrNull() ?: 0 },
-            label = { Text("Đang tìm") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(boxBackgroundColor)
+            modifier = Modifier.fillMaxWidth()
         )
 
         // ... (Thêm các trường thông tin khác)
@@ -144,19 +120,19 @@ fun PhotosAndSuggestions(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-//            items(selectedImages) { imageUri ->
-//                AsyncImage(
-//                    model = ImageRequest.Builder(LocalContext.current)
-//                        .data(imageUri)
-//                        .crossfade(true)
-//                        .build(),
-//                    contentDescription = "Selected image",
-//                    modifier = Modifier
-//                        .size(80.dp)
-//                        .clip(RoundedCornerShape(8.dp)),
-//                    contentScale = ContentScale.Crop
-//                )
-//            }
+            items(selectedImages) { imageUri ->
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageUri)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "Selected image",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
             item {
                 // Nút thêm ảnh
@@ -177,10 +153,4 @@ fun PhotosAndSuggestions(
             }
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun DefaultPreview() {
-    ProfileEditingScreen()
 }

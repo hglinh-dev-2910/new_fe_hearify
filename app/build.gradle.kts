@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
 }
 
 android {
@@ -53,6 +54,10 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
 
 
     testImplementation(libs.junit)
@@ -68,4 +73,5 @@ dependencies {
     implementation(libs.ktor.client.okhttp) //ktor client
     implementation(libs.ktor.client.serialization)
     implementation(libs.kotlinx.serialization.json)
+
 }
