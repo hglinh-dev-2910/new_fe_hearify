@@ -1,5 +1,8 @@
-package com.example.new_fe_hearify
+package com.example.new_fe_hearify.loginView
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,9 +10,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -17,11 +23,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.new_fe_hearify.R
 import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
+import com.example.new_fe_hearify.viewModel.AuthViewModel
+import com.example.new_fe_hearify.viewModel.LaunchGoogleSignInButton
+import com.example.new_fe_hearify.viewModel.LaunchGoogleSignInButton
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login1Screen(modifier: Modifier = Modifier) {  // Changed to Login1Screen
+fun Login1Screen(
+    viewModel: AuthViewModel,
+    modifier: Modifier = Modifier
+) {  // Changed to Login1Screen
+    val context = LocalContext.current
+    val activity = context as Activity
+
+    val loading by viewModel.loading.observeAsState(initial = false)
+    val error by viewModel.error.observeAsState()
+    val registrationResult by viewModel.registrationResult.observeAsState()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -81,21 +102,27 @@ fun Login1Screen(modifier: Modifier = Modifier) {  // Changed to Login1Screen
         Spacer(modifier = Modifier.height(16.dp))
 
         // Google Login
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.google_logo), // Replace with Google logo
-                    contentDescription = "Google Logo",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Đăng nhập với tài khoản Google", color = Color.Black)
-            }
-        }
+
+//        Button(
+//            onClick = {
+//                launchGoogleSignIn(activity, viewModel) { errorMessage ->
+//                    viewModel.error.postValue(errorMessage)
+//                }
+//            },
+//            modifier = Modifier.fillMaxWidth(),
+//            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+//        ) {
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.google_logo), // Replace with Google logo
+//                    contentDescription = "Google Logo",
+//                    modifier = Modifier.size(24.dp)
+//                )
+//                Spacer(modifier = Modifier.width(8.dp))
+//                Text("Đăng nhập với tài khoản Google", color = Color.Black)
+//            }
+//        }
+        LaunchGoogleSignInButton(viewModel = viewModel)
         Spacer(modifier = Modifier.height(8.dp))
 
         // Facebook Login
@@ -136,10 +163,11 @@ fun Login1Screen(modifier: Modifier = Modifier) {  // Changed to Login1Screen
     }
 }
 
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Login1LayoutPreview() {
     New_fe_hearifyTheme {
-        Login1Screen(Modifier)  // Changed to Login1Screen
+        Login1Screen(viewModel = AuthViewModel())  // Changed to Login1Screen
     }
 }

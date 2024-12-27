@@ -4,7 +4,8 @@ import com.example.new_fe_hearify.data.LoginRequest
 import com.example.new_fe_hearify.data.RegisterRequest
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.cio.CIO
+
 
 import io.ktor.client.request.*
 import io.ktor.client.statement.bodyAsText
@@ -12,11 +13,11 @@ import io.ktor.http.*
 import kotlinx.serialization.json.Json
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 class AuthRepository {
-
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json {
@@ -41,27 +42,6 @@ class AuthRepository {
         } catch (e: Exception) {
             println("Registration error: ${e.message}")
             null
-        }
-    }
-    suspend fun loginUser(request: LoginRequest): Pair<String?, String?> {
-        return try {
-            val response = client.post("http://10.0.2.2:8080/login") {
-                contentType(ContentType.Application.Json)
-                setBody(request)
-            }
-
-            val responseBody = response.bodyAsText()
-            println("Login Response: $responseBody")
-
-            val responseJson = Json.parseToJsonElement(responseBody).jsonObject
-            val token = responseJson["token"]?.jsonPrimitive?.content
-            val message = responseJson["message"]?.jsonPrimitive?.content
-
-            Pair(token, message)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            println("Login error: ${e.message}")
-            Pair(null, "Login failed: ${e.message}")
         }
     }
 
