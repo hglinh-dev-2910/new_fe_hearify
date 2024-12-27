@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.new_fe_hearify"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -53,12 +53,12 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
-    implementation(libs.gms.play.services.auth)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.gson)
     implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.serialization.gson)
+
 
 
     testImplementation(libs.junit)
