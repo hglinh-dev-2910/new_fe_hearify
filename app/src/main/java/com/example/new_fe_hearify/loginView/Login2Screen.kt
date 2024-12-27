@@ -1,5 +1,6 @@
 package com.example.new_fe_hearify.loginView
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,22 +39,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.R
+import com.example.new_fe_hearify.data.ChatMessage
 import com.example.new_fe_hearify.data.LoginRequest
 import com.example.new_fe_hearify.ktorClient.ktorClient
 import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import kotlinx.serialization.json.Json
+
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 
+
 @Serializable
 data class LoginResponse(
-    val token: String? = null,
-    val userID: Int? = null,
+    val token: String,
+    val userId: Int,
+    val message: String
 )
 
 @Composable
@@ -74,14 +82,14 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
         )
 
         //email, password for login
-        var email by remember { mutableStateOf("") }
+        var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
 
 
         InputField(
-            label = "Email",
-            placeholder = "Enter your email",
-            onValueChange = {email = it}
+            label = "Username",
+            placeholder = "Enter your username",
+            onValueChange = {username = it}
         )
         Spacer(modifier = Modifier.height(8.dp))
         InputField(
@@ -97,24 +105,33 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
             onClick = {
                 coroutineScope.launch {
                     // Kiểm tra giá trị email và password
-                    if (email.isBlank() || password.isBlank()) {
+                    if (username.isBlank() || password.isBlank()) {
                         println("Email and password cannot be empty!")
                         return@launch
                     }
 
-                    // Tạo request
-                    val request = LoginRequest("traditional", email, password)
+                    // request
+                    val request = LoginRequest("traditional", username, password)
 
                     println(request)
                     try {
-                        // Gửi request tới backend
-                        val response: LoginResponse = ktorClient.post("http://10.0.2.2:8080/login") {
+                        // response
+                        val response: HttpResponse = ktorClient.post("http://10.0.2.2:8080/login") {
                             contentType(ContentType.Application.Json)
                             setBody(request)
                         }.body()
 
-                        // success
-                        println("Login successful! Token: ${response.token}")
+                        if (response.status == HttpStatusCode.OK) {
+                            val loginResponse: LoginResponse = response.body()
+                            val token = loginResponse.token
+                            val userId = loginResponse.userId
+
+                            println("Token : $token")
+                            println("userId : $userId")
+                        }
+
+
+
                         navController.navigate("dashboard") // nav to dashboard
                     } catch (e: Exception) {
                         println("Login failed: ${e.message}")
