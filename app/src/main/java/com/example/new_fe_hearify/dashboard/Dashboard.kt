@@ -48,7 +48,7 @@ fun DashboardScreen() {
                         Icon(
                             painter = painterResource(id = R.drawable.anhtuyet), // Thay bằng icon người dùng
                             contentDescription = "User",
-                            tint = Color.Black // Màu đen cho icon
+                            //tint = Color.Black // Màu đen cho icon
                         )
                     }
                 }
@@ -79,7 +79,7 @@ fun DashboardScreen() {
                 // Icon trái tim
                 IconButton(onClick = { /* Xử lý sự kiện */ }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.heart8bit), // Thay bằng icon trái tim
+                        painter = painterResource(id = R.drawable.user), // Thay bằng icon trái tim
                         contentDescription = "Heart",
                         tint = Color.Red // Màu đỏ cho icon
                     )
