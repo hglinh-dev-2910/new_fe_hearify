@@ -1,121 +1,338 @@
 package com.example.new_fe_hearify.message
 
+import com.example.new_fe_hearify.message.Messages
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-data class Message(
-    val sender: String,
-    val text: String,
-    val time: LocalDateTime = LocalDateTime.now(), // Thời gian mặc định là hiện tại
-    val isUser: Boolean = false // Mặc định là tin nhắn của người khác
-)
 
+@RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MessageScreen() {
-    val messages = listOf(
-        Message("Như", "Anh tìm gì trên này? :)"),
-        Message("Kim", "Dung"),
-        Message("Cậu", "sinh năm bao nhiuuuu"),
-        Message("The", "hóa ra người đẹp cũng biết buồn", time = LocalDateTime.now().minusDays(1)), // Tin nhắn cũ hơn 1 ngày
-        Message("Tôi", "Chào bạn", isUser = true) // Tin nhắn của người dùng hiện tại
-    )
+fun MessagesScreen(
+    navController: NavHostController,
+    messages: List<Messages>,
+    currentUser: String,
+    receiver: String
+) {
+    var inputText by remember { mutableStateOf("") }
+    var messageList by remember { mutableStateOf(messages) }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        reverseLayout = true // Đảo ngược danh sách để tin nhắn mới nhất ở dưới cùng
-    ) {
-        items(messages) { message ->
-            MessageItem(message)
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Top Bar
+        TopAppBar(
+            title = { Text(receiver, fontWeight = FontWeight.Bold) },
+            actions = {
+
+
+            },
+            navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) { // PopBackStack để quay lại
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                        contentDescription = "Back"
+                    )
+                }
+            }
+        )
+
+        // Messages
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(16.dp)
+        ) {
+            items(messageList) { message ->
+                MessageCard(message, currentUser)
+            }
+        }
+
+        // Input Area
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { /* Handle image attachment */ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your attach image icon
+                    contentDescription = "Attach Image"
+                )
+            }
+            TextField(
+                value = inputText,
+                onValueChange = { inputText = it },
+                placeholder = { Text("Type your message") },
+                modifier = Modifier.weight(1f)
+            )
+            IconButton(onClick = {
+                if (inputText.isNotBlank()) {
+                    val newMessage = Messages(
+                        senderId = currentUser,
+                        receiverId = receiver,
+                        message = inputText,
+                        timestamp = LocalDateTime.now()
+                            .format(DateTimeFormatter.ofPattern("hh:mm a"))
+                    )
+                    messageList = messageList + newMessage
+                    inputText = ""
+                }
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your send message icon
+                    contentDescription = "Send Message"
+                )
+            }
         }
     }
 }
 
 @Composable
-fun MessageItem(message: Message) {
-    val formatter = DateTimeFormatter.ofPattern("HH:mm") // Định dạng thời gian
-    Column(
+fun MessageCardList(message: Messages, currentUser: String) {
+    val isCurrentUser = message.senderId == currentUser
+
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalAlignment = if (message.isUser) Alignment.End else Alignment.Start
+            .padding(8.dp),
+        horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
     ) {
-        // Hiển thị tên người gửi nếu là tin nhắn đầu tiên trong nhóm
-        if (message.isUser) {
-            Text(
-                text = message.sender,
-                fontWeight = FontWeight.Bold,
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
-        }
-
-        Row(
-            verticalAlignment = Alignment.Bottom
-        ) {
-            if (!message.isUser) { // Chỉ hiển thị ảnh đại diện nếu không phải tin nhắn của người dùng
+        if (!isCurrentUser) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.messavar), // Thay thế bằng ảnh đại diện thực tế
-                    contentDescription = "avatar",
-                    contentScale = ContentScale.Crop,
+                    painter = painterResource(R.drawable.ic_launcher_foreground),
+                    contentDescription = "Avatar",
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
+                Text(text = message.senderId, fontWeight = FontWeight.Bold)
             }
+            Spacer(modifier = Modifier.width(8.dp))
+        }
 
-            // Khung tin nhắn
-            Box(
+        Card(
+            modifier = Modifier.widthIn(max = 300.dp), // Limit the width of the message bubble
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = if (isCurrentUser) Color(0xFFE0F7FA) else Color(0xFFF0F0F0)
+            )
+        ) {
+            Column(
                 modifier = Modifier
-                    .background(
-                        color = if (message.isUser) Color.Green else Color.LightGray,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .padding(12.dp)
+                    .padding(16.dp)
             ) {
                 Text(
-                    text = message.text,
-                    fontSize = 16.sp,
-                    color = if (message.isUser) Color.White else Color.Black
+                    text = message.message,
+                    modifier = Modifier
+                        .background(
+                            color = Color.Transparent, // No need for additional background
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                )
+
+                Text(
+                    text = message.timestamp,
+                    fontSize = 12.sp,
+                    color = Color.Gray
                 )
             }
         }
-
-        // Hiển thị thời gian
-        Text(
-            text = message.time.format(formatter),
-            fontSize = 12.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(top = 2.dp)
-        )
     }
 }
 
-@Preview (showBackground = true)
+@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MessengerPreview(modifier: Modifier = Modifier) {
-    MessageScreen()
-    
+fun MessageListScreen(navController: NavHostController, messages: List<Messages>, currentUser: String) {
+    val receiversWithLatestMessage = remember { mutableStateMapOf<String, Messages>() }
+    messages.forEach { message ->
+        val otherUser = if (message.senderId == currentUser) message.receiverId else message.senderId
+        receiversWithLatestMessage[otherUser] = message
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Messages", fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            @Composable
+            fun MessageCard(message: Messages, currentUser: String) {
+                val isCurrentUser = message.senderId == currentUser
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
+                ) {
+                    if (!isCurrentUser) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Image(
+                                painter = painterResource(R.drawable.ic_launcher_foreground),
+                                contentDescription = "Avatar",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = message.senderId, fontWeight = FontWeight.Bold)
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+
+                    Card(
+                        modifier = Modifier.widthIn(max = 300.dp), // Limit the width of the message bubble
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isCurrentUser) Color(0xFFE0F7FA) else Color(0xFFF0F0F0)
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = message.message,
+                                modifier = Modifier
+                                    .background(
+                                        color = Color.Transparent, // No need for additional background
+                                        shape = RoundedCornerShape(16.dp)
+                                    )
+                            )
+
+                            Text(
+                                text = message.timestamp,
+                                fontSize = 12.sp,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                }
+            }
+
+            @RequiresApi(Build.VERSION_CODES.O)
+            @Composable
+            fun MessageListScreen(navController: NavHostController, messages: List<Messages>, currentUser: String) {
+                val receiversWithLatestMessage = remember { mutableStateMapOf<String, Messages>() }
+                messages.forEach { message ->
+                    val otherUser = if (message.senderId == currentUser) message.receiverId else message.senderId
+                    receiversWithLatestMessage[otherUser] = message
+                }
+
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text("Messages", fontWeight = FontWeight.Bold) },
+                            navigationIcon = {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                                        contentDescription = "Back"
+                                    )
+                                }
+                            }
+                        )
+                    }
+                ) { innerPadding ->
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        items(receiversWithLatestMessage.toList()) { (receiver, latestMessage) ->
+                            ReceiverItem(receiver, latestMessage.message) {
+                                // Navigate to MessagesScreen with the selected receiver
+                                navController.navigate("messages_screen/$currentUser/$receiver")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ReceiverItem(receiver: String, lastMessage: String, onReceiverClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onReceiverClick() }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_launcher_foreground), // Replace with user avatar
+            contentDescription = "Avatar",
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Column {
+            Text(text = receiver, fontWeight = FontWeight.Bold)
+            Text(text = lastMessage, fontSize = 12.sp, color = Color.Gray)
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun MessageListScreenPreview() {
+    MessageListScreen(
+        navController = rememberNavController(),
+        messages = listOf(
+            Messages("user1", "user2", "Hello", "10:00 AM"),
+            Messages("user2", "user1", "Hi", "10:01 AM"),
+            Messages("user3", "user2", "Hey", "11:00 AM"),
+            Messages("user1", "user2", "How are you?", "11:30 AM") // Latest message from user1
+        ),
+        currentUser = "user2"
+    )
 }

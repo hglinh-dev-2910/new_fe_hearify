@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -37,7 +39,12 @@ data class Messages(
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ChattingScreen(messages: List<Messages>, currentUser: String, receiver: String) {
+fun ChattingScreen(
+    navController: NavHostController, // Add NavHostController
+    messages: List<Messages>,
+    currentUser: String,
+    receiver: String
+) {
     var inputText by remember { mutableStateOf("") }
     var messageList by remember { mutableStateOf(messages) }
 
@@ -50,9 +57,9 @@ fun ChattingScreen(messages: List<Messages>, currentUser: String, receiver: Stri
 
             },
             navigationIcon = {
-                IconButton(onClick = { /* Handle back navigation */ }) {
+                IconButton(onClick = { navController.navigate("wherever_you_want") }) {  // Add navigation here
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your back arrow icon
+                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
                         contentDescription = "Back"
                     )
                 }
@@ -80,7 +87,7 @@ fun ChattingScreen(messages: List<Messages>, currentUser: String, receiver: Stri
         ) {
             IconButton(onClick = { /* Handle image attachment */ }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your attach image icon
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "Attach Image"
                 )
             }
@@ -104,7 +111,7 @@ fun ChattingScreen(messages: List<Messages>, currentUser: String, receiver: Stri
                 }
             }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your send message icon
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "Send Message"
                 )
             }
@@ -124,7 +131,7 @@ fun MessageCard(message: Messages, currentUser: String) {
     ) {
         if (!isCurrentUser) {
             Image(
-                painter = painterResource(R.drawable.ic_launcher_foreground), // Replace with your user avatar
+                painter = painterResource(R.drawable.ic_launcher_foreground),
                 contentDescription = "Avatar",
                 modifier = Modifier
                     .size(40.dp)
@@ -138,7 +145,9 @@ fun MessageCard(message: Messages, currentUser: String) {
                 text = message.message,
                 modifier = Modifier
                     .background(
-                        color = if (isCurrentUser) colorResource(R.color.container_background) else colorResource(R.color.app_name_color),
+                        color = if (isCurrentUser) colorResource(R.color.container_background) else colorResource(
+                            R.color.app_name_color
+                        ),
                         shape = RoundedCornerShape(16.dp)
                     )
                     .padding(8.dp)
@@ -156,11 +165,14 @@ fun MessageCard(message: Messages, currentUser: String) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-fun MessageScreenPreview() {
+fun ChattingScreenPreview() {
+    // You'll need a NavHostController for this preview,
+    // but since it's not related to navigation logic,
+    // you can use a rememberNavController() here.
     ChattingScreen(
+        rememberNavController(),
         messages = listOf(),
         currentUser = "user2",
         receiver = "user1"
     )
 }
-
