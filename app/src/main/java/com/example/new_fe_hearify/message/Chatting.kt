@@ -37,7 +37,7 @@ data class Messages(
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MessageScreen(messages: List<Messages>, currentUser: String, receiver: String) {
+fun ChattingScreen(messages: List<Messages>, currentUser: String, receiver: String) {
     var inputText by remember { mutableStateOf("") }
     var messageList by remember { mutableStateOf(messages) }
 
@@ -157,7 +157,7 @@ fun MessageCard(message: Messages, currentUser: String) {
 @Preview(showBackground = true)
 @Composable
 fun MessageScreenPreview() {
-    MessageScreen(
+    ChattingScreen(
         messages = listOf(),
         currentUser = "user2",
         receiver = "user1"
