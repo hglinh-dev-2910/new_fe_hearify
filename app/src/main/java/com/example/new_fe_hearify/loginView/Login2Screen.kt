@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,12 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
 
 @Composable
-fun Login2Screen(modifier: Modifier = Modifier,
-                 navController: NavHostController
-) {
+fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -47,7 +43,7 @@ fun Login2Screen(modifier: Modifier = Modifier,
             label = "Email",
             placeholder = "Enter your email"
         )
-        Spacer(modifier = Modifier.height(8.dp)) // Space between InputFields
+        Spacer(modifier = Modifier.height(8.dp))
         InputField(
             label = "Password",
             placeholder = "Enter your password",
@@ -60,7 +56,22 @@ fun Login2Screen(modifier: Modifier = Modifier,
             // Handle login logic here
         }
         Spacer(modifier = Modifier.height(16.dp))
-        JWTauth(text1 = "Sign Up", text2 = "Forgot?")
+
+        // Signup Button
+        Button(
+            onClick = { navController.navigate("registerview") }, // Navigate to RegisterView
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFCDD2))
+        ) {
+            Text("Sign Up", color = Color.Red)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Forgot Password Button
+        TextButton(onClick = { /* Handle forgot password logic */ }) {
+            Text("Forgot?", color = Color.Red)
+        }
     }
 }
 
@@ -123,49 +134,10 @@ fun InputField(
     )
 }
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun JWTauth(modifier: Modifier = Modifier, text1: String, text2: String) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth() // Fill the width
-            .padding(horizontal = 20.dp), // Only horizontal padding
-        horizontalArrangement = Arrangement.SpaceBetween // Maximum space between items
-    ) {
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .height(40.dp)
-                .width(80.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = text1,
-                style = TextStyle(
-                    color = colorResource(id = R.color.purple_200) // Replace with your actual color resource
-                )
-            )
-        }
-        Box(
-            modifier = Modifier
-                .background(Color.Blue)
-                .height(40.dp)
-                .width(80.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = text2,
-                style = TextStyle(
-                    color = colorResource(id = R.color.login_background) // Replace with your actual color resource
-                )
-            )
-        }
+fun LoginLayoutPreview() {
+    New_fe_hearifyTheme {
+        Login2Screen(Modifier, rememberNavController())
     }
 }
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun LoginLayoutPreview() {
-//    New_fe_hearifyTheme {
-//        Login2Screen(Modifier)
-//    }
-//}
