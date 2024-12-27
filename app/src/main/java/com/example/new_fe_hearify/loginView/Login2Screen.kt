@@ -68,10 +68,7 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Forgot Password Button
-        TextButton(onClick = { /* Handle forgot password logic */ }) {
-            Text("Forgot?", color = Color.Red)
-        }
+
     }
 }
 
