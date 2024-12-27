@@ -18,7 +18,7 @@ import com.example.new_fe_hearify.introView.Intro1Screen
 import com.example.new_fe_hearify.introView.Intro34Screen
 import com.example.new_fe_hearify.loginView.Login2Screen
 import com.example.new_fe_hearify.message.ChattingScreen
-import com.example.new_fe_hearify.message.MessageListScreen
+//import com.example.new_fe_hearify.message.MessageListScreen
 import com.example.new_fe_hearify.message.Messages
 import com.example.new_fe_hearify.registerView.RegistrationScreen
 import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
@@ -57,7 +57,7 @@ fun MainApp(navController: NavHostController) {
             Login2Screen(Modifier, navController)
         }
         composable("registerview") {
-            RegistrationScreen(viewModel = AuthViewModel(), Modifier, navController)
+            RegistrationScreen( Modifier, navController)
         }
         composable("dashboard") {
             DashboardScreen()
@@ -66,7 +66,7 @@ fun MainApp(navController: NavHostController) {
         composable("messagelistview/{currentUser}") { backStackEntry ->
             val currentUser = backStackEntry.arguments?.getString("currentUser") ?: ""
             val messages = listOf<Messages>( /* Fetch your messages here */ )
-            MessageListScreen(navController, messages, currentUser)
+            //MessageListScreen(navController, messages, currentUser)
         }
         composable("chattingview/{currentUser}/{receiver}") { backStackEntry ->
             val currentUser = backStackEntry.arguments?.getString("currentUser") ?: ""
