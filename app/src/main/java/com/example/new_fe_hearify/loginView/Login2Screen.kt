@@ -49,10 +49,12 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
+
 @Serializable
 data class LoginResponse(
-    val token: String? = null,
-    val userID: Int? = null,
+    val token: String,
+    val userId: Int,
+    //val message : String
 )
 
 @Composable
@@ -72,21 +74,22 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
             modifier = Modifier.padding(16.dp)
         )
 
-        // username and password for login
+        //email, password for login
         var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
+
 
         InputField(
             label = "Username",
             placeholder = "Enter your username",
-            onValueChange = { username = it }
+            onValueChange = {username = it}
         )
         Spacer(modifier = Modifier.height(8.dp))
         InputField(
             label = "Password",
             placeholder = "Enter your password",
             isPassword = true,
-            onValueChange = { password = it }
+            onValueChange = {password = it}
         )
         val coroutineScope = rememberCoroutineScope()
         LoginButton(
@@ -94,18 +97,18 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
             modifier = Modifier.padding(16.dp),
             onClick = {
                 coroutineScope.launch {
-                    // Check if username and password are not empty
+                    // Kiểm tra giá trị email và password
                     if (username.isBlank() || password.isBlank()) {
-                        println("Username and password cannot be empty!")
+                        println("Email and password cannot be empty!")
                         return@launch
                     }
 
-                    // Create request
-                    val request = LoginRequest("traditional", username, password) // Use username here
+                    // Tạo request
+                    val request = LoginRequest("traditional", username, password)
 
                     println(request)
                     try {
-                        // Send request to backend
+                        // Gửi request tới backend
                         val response: LoginResponse = ktorClient.post("http://10.0.2.2:8080/login") {
                             contentType(ContentType.Application.Json)
                             setBody(request)
@@ -133,6 +136,7 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
 
     }
 }

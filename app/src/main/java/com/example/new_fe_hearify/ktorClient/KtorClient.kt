@@ -10,11 +10,14 @@ import kotlinx.serialization.json.Json
 
 val ktorClient = HttpClient(CIO) {
     install(ContentNegotiation) {
-        json(Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        })
+        json(
+            Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            }
+        )
+
     }
 }
 
