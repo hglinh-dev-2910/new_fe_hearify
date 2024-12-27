@@ -1,13 +1,13 @@
+package com.example.new_fe_hearify.introView
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,14 +19,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.R
 
 @Composable
-fun Intro34Screen(modifier: Modifier = Modifier) {
+fun Intro34Screen(modifier: Modifier = Modifier, navController: NavHostController) {
     Box(modifier = modifier.fillMaxSize()) {
         // Background image
         Image(
-            painter = painterResource(id = R.drawable.messi),
+            painter = painterResource(id = R.drawable.messi), // Replace with your actual image
             contentDescription = "background",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -37,37 +39,41 @@ fun Intro34Screen(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
-                .align(Alignment.TopCenter) // Align to TopCenter
+                .align(Alignment.TopCenter)
         ) {
-            // "Quay lại" and "Bỏ qua" texts
+            // "Quay lại" and "Bỏ qua" buttons
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .offset(y = 40.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = "Quay lại",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
+                TextButton(onClick = { navController.popBackStack() }) {
+                    Text(
+                        text = "Quay lại",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                }
 
-                Text(
-                    text = "Bỏ qua",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
+                TextButton(onClick = { navController.navigate("login1view") }) { // Replace with your main screen route
+                    Text(
+                        text = "Bỏ qua",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                }
             }
 
             // Heart and Close buttons
             Column(
                 modifier = Modifier
                     .offset(y = 300.dp)
-                    .align(Alignment.End) // Align to the end of the parent (right)
+                    .align(Alignment.End)
             ) {
-                IconButton(onClick = { /* Do nothing */ }) {
+                IconButton(onClick = {  }) {
                     Icon(
                         imageVector = Icons.Default.Favorite,
                         contentDescription = "Heart",
@@ -110,5 +116,5 @@ fun Intro34Screen(modifier: Modifier = Modifier) {
 @Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
-    Intro34Screen()
+    Intro34Screen(navController = rememberNavController())
 }

@@ -1,8 +1,5 @@
-package com.example.new_fe_hearify.loginView
+package com.example.new_fe_hearify
 
-import android.app.Activity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,12 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,30 +17,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.new_fe_hearify.R
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
-import com.example.new_fe_hearify.viewModel.AuthViewModel
-import com.example.new_fe_hearify.viewModel.LaunchGoogleSignInButton
-import com.example.new_fe_hearify.viewModel.LaunchGoogleSignInButton
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login1Screen(
-    viewModel: AuthViewModel,
-    modifier: Modifier = Modifier
-) {  // Changed to Login1Screen
-    val context = LocalContext.current
-    val activity = context as Activity
-
-    val loading by viewModel.loading.observeAsState(initial = false)
-    val error by viewModel.error.observeAsState()
-    val registrationResult by viewModel.registrationResult.observeAsState()
-
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF2DEDE)) // Set background color
+            .background(Color(0xFFF2DEDE))
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -65,7 +49,7 @@ fun Login1Screen(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("login2view") }, // Navigate to LoginView2
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
@@ -74,7 +58,7 @@ fun Login1Screen(
                 Text("Đăng nhập", color = Color.Red)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("registerview") }, // Navigate to RegisterView
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp),
@@ -102,34 +86,28 @@ fun Login1Screen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Google Login
-
-//        Button(
-//            onClick = {
-//                launchGoogleSignIn(activity, viewModel) { errorMessage ->
-//                    viewModel.error.postValue(errorMessage)
-//                }
-//            },
-//            modifier = Modifier.fillMaxWidth(),
-//            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
-//        ) {
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Image(
-//                    painter = painterResource(id = R.drawable.google_logo), // Replace with Google logo
-//                    contentDescription = "Google Logo",
-//                    modifier = Modifier.size(24.dp)
-//                )
-//                Spacer(modifier = Modifier.width(8.dp))
-//                Text("Đăng nhập với tài khoản Google", color = Color.Black)
-//            }
-//        }
-        LaunchGoogleSignInButton(viewModel = viewModel)
+        Button(
+            onClick = { /*TODO*/ },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = R.drawable.google_logo), // Replace with Google logo
+                    contentDescription = "Google Logo",
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Đăng nhập với tài khoản Google", color = Color.Black)
+            }
+        }
         Spacer(modifier = Modifier.height(8.dp))
 
         // Facebook Login
         Button(
             onClick = { /*TODO*/ },
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998)) // Facebook blue
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998))
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
@@ -163,11 +141,10 @@ fun Login1Screen(
     }
 }
 
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Login1LayoutPreview() {
     New_fe_hearifyTheme {
-        Login1Screen(viewModel = AuthViewModel())  // Changed to Login1Screen
+        Login1Screen(Modifier, rememberNavController())
     }
 }
