@@ -25,13 +25,22 @@ import androidx.compose.ui.unit.sp
 //import coil.compose.AsyncImage
 //import coil.request.ImageRequest
 import com.example.new_fe_hearify.R
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.os.Build
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import android.provider.MediaStore
 
-// ... (MessageScreen và MessageItem từ câu trả lời trước)
+/* ... (MessageScreen và MessageItem từ câu trả lời trước) */
 
 @Composable
 fun ProfileEditingScreen() {
     var name by remember { mutableStateOf("Minh") }
     var age by remember { mutableStateOf(20) }
+    var find by remember { mutableStateOf("MQH khong rang buoc") }
+
     var bio by remember { mutableStateOf("Thích hải sản thì phải ăn ghẹ\nThích làm mẹ thì hãy ăn anh") }
     var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
 
@@ -42,11 +51,18 @@ fun ProfileEditingScreen() {
         uris?.let { selectedImages = it }
     }
 
+    // Màu nền cho screen
+    val screenBackgroundColor = Color(0xFFFFE1EA)
+    // Màu nền cho các box
+    val boxBackgroundColor = Color(0xFFFABDCF)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
+            .background(screenBackgroundColor) // Áp dụng màu nền cho screen
+
     ) {
         Text(
             text = "Chỉnh sửa hồ sơ",
@@ -65,7 +81,9 @@ fun ProfileEditingScreen() {
             value = bio,
             onValueChange = { bio = it },
             label = { Text("Bio") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(boxBackgroundColor)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -75,16 +93,29 @@ fun ProfileEditingScreen() {
             value = name,
             onValueChange = { name = it },
             label = { Text("Tên") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(boxBackgroundColor)
         )
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = age.toString(),
             onValueChange = { age = it.toIntOrNull() ?: 0 },
             label = { Text("Độ tuổi") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(boxBackgroundColor)
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = find,
+            onValueChange = { find = it },
+            label = { Text("Dang tim") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(boxBackgroundColor)
+        )
         // ... (Thêm các trường thông tin khác)
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -104,6 +135,8 @@ fun PhotosAndSuggestions(
     selectedImages: List<Uri>,
     launcher: androidx.activity.result.ActivityResultLauncher<String>
 ) {
+    val context = LocalContext.current
+
     Column {
         Text(
             text = "Ảnh và gợi ý",
@@ -122,17 +155,21 @@ fun PhotosAndSuggestions(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(selectedImages) { imageUri ->
-//                AsyncImage(
-//                    model = ImageRequest.Builder(LocalContext.current)
-//                        .data(imageUri)
-//                        .crossfade(true)
-//                        .build(),
-//                    contentDescription = "Selected image",
-//                    modifier = Modifier
-//                        .size(80.dp)
-//                        .clip(RoundedCornerShape(8.dp)),
-//                    contentScale = ContentScale.Crop
-//                )
+                // Xử lý URI thành Bitmap
+                val bitmap = remember(imageUri) {
+                    getBitmapFromUri(context, imageUri)
+                }
+
+                if (bitmap != null) {
+                    Image(
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = "Selected image",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
 
             item {
@@ -153,6 +190,20 @@ fun PhotosAndSuggestions(
                 }
             }
         }
+    }
+}
+
+fun getBitmapFromUri(context: android.content.Context, uri: Uri): Bitmap? {
+    return try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val source = ImageDecoder.createSource(context.contentResolver, uri)
+            ImageDecoder.decodeBitmap(source)
+        } else {
+            MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
     }
 }
 
