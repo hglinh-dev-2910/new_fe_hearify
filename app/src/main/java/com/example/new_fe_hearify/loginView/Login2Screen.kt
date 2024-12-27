@@ -52,8 +52,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginResponse(
-    val token: String? = null,
-    val userID: Int? = null,
+    val token: String,
+    val userId: Int,
+    //val message : String
 )
 
 @Composable
@@ -74,14 +75,14 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
         )
 
         //email, password for login
-        var email by remember { mutableStateOf("") }
+        var username by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
 
 
         InputField(
-            label = "Email",
-            placeholder = "Enter your email",
-            onValueChange = {email = it}
+            label = "Username",
+            placeholder = "Enter your username",
+            onValueChange = {username = it}
         )
         Spacer(modifier = Modifier.height(8.dp))
         InputField(
@@ -97,13 +98,13 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
             onClick = {
                 coroutineScope.launch {
                     // Kiểm tra giá trị email và password
-                    if (email.isBlank() || password.isBlank()) {
+                    if (username.isBlank() || password.isBlank()) {
                         println("Email and password cannot be empty!")
                         return@launch
                     }
 
                     // Tạo request
-                    val request = LoginRequest("traditional", email, password)
+                    val request = LoginRequest("traditional", username, password)
 
                     println(request)
                     try {
