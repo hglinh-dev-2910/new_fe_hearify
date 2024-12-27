@@ -19,6 +19,16 @@ ktorClientSerialization = "3.0.1"
 kotlinxSerializationJson = "1.7.3"
 foundationLayout = "1.7.6"
 foundationLayoutAndroid = "1.7.6"
+runtimeLivedata = "1.7.6"
+ktorClientCio = "3.0.3"
+ktorClientContentNegotiation = "3.0.3"
+ktorSerializationGson = "3.0.3"
+ktorSerializationKotlinxJson = "3.0.3"
+credentials = "1.3.0"
+credentialsPlayServicesAuth = "1.3.0"
+kotlinxSerializationJsonVersion = "1.8.0-RC"
+ktorClientCore = "3.0.3"
+ktorClientWebsockets = "3.0.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,10 +52,20 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-material = { group = "androidx.compose.material", name = "material", version.ref = "material" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktorClientOkhttp" }
-ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktorClientSerialization" }
+ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version = "3.0.3" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktorClientCio" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiation" }
+ktor-serialization-gson = { group = "io.ktor", name = "ktor-serialization-gson", version.ref = "ktorSerializationGson" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJson" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
+jetbrains-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJsonVersion" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktorClientCore" }
+ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref = "ktorClientWebsockets" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

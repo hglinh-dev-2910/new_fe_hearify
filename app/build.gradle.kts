@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -10,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.new_fe_hearify"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -53,7 +54,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
-    implementation(libs.gms.play.services.auth)
+
+
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
@@ -61,8 +63,10 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
-    implementation(libs.googleid)
-    implementation(libs.androidx.browser)
+    implementation(libs.jetbrains.kotlinx.serialization.json)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.websockets)
+
 
 
     testImplementation(libs.junit)
@@ -78,4 +82,8 @@ dependencies {
     implementation(libs.ktor.client.okhttp) //ktor client
     implementation(libs.ktor.client.serialization)
     implementation(libs.kotlinx.serialization.json)
+
+
+
+
 }

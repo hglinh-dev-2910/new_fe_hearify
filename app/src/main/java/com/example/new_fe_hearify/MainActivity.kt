@@ -13,8 +13,10 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.new_fe_hearify.dashboard.DashboardScreen
 import com.example.new_fe_hearify.introView.Intro1Screen
 import com.example.new_fe_hearify.introView.Intro34Screen
+import com.example.new_fe_hearify.loginView.Login2Screen
 import com.example.new_fe_hearify.registerView.RegistrationScreen
 import com.example.new_fe_hearify.ui.theme.New_fe_hearifyTheme
 import com.example.new_fe_hearify.viewModel.AuthViewModel
@@ -46,13 +48,16 @@ fun MainApp(navController: NavHostController) {
             Intro34Screen(Modifier, navController)
         }
         composable("login1view") {
-            Login1Screen(   Modifier, navController)
+            Login1Screen( Modifier, navController)
         }
         composable("login2view") {
             Login2Screen(Modifier, navController)
         }
         composable("registerview") {
             RegistrationScreen(viewModel = AuthViewModel(),Modifier, navController)
+        }
+        composable("dashboard") {
+            DashboardScreen()
         }
     }
 }
