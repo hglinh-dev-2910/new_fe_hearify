@@ -65,16 +65,14 @@ fun MainApp(navController: NavHostController) {
         // Add this composable route for the MessageListScreen
         composable("messagelistview/{currentUser}") { backStackEntry ->
             val currentUser = backStackEntry.arguments?.getString("currentUser") ?: ""
-            // You'll need to fetch the messages here and pass them to MessageListScreen
             val messages = listOf<Messages>( /* Fetch your messages here */ )
             MessageListScreen(navController, messages, currentUser)
         }
-        // Modify this composable route for ChattingScreen to accept arguments
         composable("chattingview/{currentUser}/{receiver}") { backStackEntry ->
             val currentUser = backStackEntry.arguments?.getString("currentUser") ?: ""
             val receiver = backStackEntry.arguments?.getString("receiver") ?: ""
-            // You'll need to fetch the messages here and pass them to ChattingScreen
-            val messages = listOf<Messages>( /* Fetch your messages here */ )
+
+            val messages = listOf<Messages>( )
             ChattingScreen(navController, messages, currentUser, receiver)
         }
     }

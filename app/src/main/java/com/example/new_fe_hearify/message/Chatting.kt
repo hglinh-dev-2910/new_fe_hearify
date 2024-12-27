@@ -166,9 +166,7 @@ fun MessageCard(message: Messages, currentUser: String) {
 @Preview(showBackground = true)
 @Composable
 fun ChattingScreenPreview() {
-    // You'll need a NavHostController for this preview,
-    // but since it's not related to navigation logic,
-    // you can use a rememberNavController() here.
+
     ChattingScreen(
         rememberNavController(),
         messages = listOf(),

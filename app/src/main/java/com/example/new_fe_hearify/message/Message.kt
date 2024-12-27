@@ -31,149 +31,14 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun MessagesScreen(
-    navController: NavHostController,
-    messages: List<Messages>,
-    currentUser: String,
-    receiver: String
-) {
-    var inputText by remember { mutableStateOf("") }
-    var messageList by remember { mutableStateOf(messages) }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Top Bar
-        TopAppBar(
-            title = { Text(receiver, fontWeight = FontWeight.Bold) },
-            actions = {
 
 
-            },
-            navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) { // PopBackStack để quay lại
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = "Back"
-                    )
-                }
-            }
-        )
 
-        // Messages
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(16.dp)
-        ) {
-            items(messageList) { message ->
-                MessageCard(message, currentUser)
-            }
-        }
-
-        // Input Area
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = { /* Handle image attachment */ }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your attach image icon
-                    contentDescription = "Attach Image"
-                )
-            }
-            TextField(
-                value = inputText,
-                onValueChange = { inputText = it },
-                placeholder = { Text("Type your message") },
-                modifier = Modifier.weight(1f)
-            )
-            IconButton(onClick = {
-                if (inputText.isNotBlank()) {
-                    val newMessage = Messages(
-                        senderId = currentUser,
-                        receiverId = receiver,
-                        message = inputText,
-                        timestamp = LocalDateTime.now()
-                            .format(DateTimeFormatter.ofPattern("hh:mm a"))
-                    )
-                    messageList = messageList + newMessage
-                    inputText = ""
-                }
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your send message icon
-                    contentDescription = "Send Message"
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun MessageCardList(message: Messages, currentUser: String) {
-    val isCurrentUser = message.senderId == currentUser
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
-    ) {
-        if (!isCurrentUser) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(R.drawable.ic_launcher_foreground),
-                    contentDescription = "Avatar",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = message.senderId, fontWeight = FontWeight.Bold)
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-        }
-
-        Card(
-            modifier = Modifier.widthIn(max = 300.dp), // Limit the width of the message bubble
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isCurrentUser) Color(0xFFE0F7FA) else Color(0xFFF0F0F0)
-            )
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = message.message,
-                    modifier = Modifier
-                        .background(
-                            color = Color.Transparent, // No need for additional background
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                )
-
-                Text(
-                    text = message.timestamp,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MessageListScreen(navController: NavHostController, messages: List<Messages>, currentUser: String) {
+fun MessagesScreen(navController: NavHostController, messages: List<Messages>, currentUser: String) {
     val receiversWithLatestMessage = remember { mutableStateMapOf<String, Messages>() }
     messages.forEach { message ->
         val otherUser = if (message.senderId == currentUser) message.receiverId else message.senderId
@@ -200,97 +65,10 @@ fun MessageListScreen(navController: NavHostController, messages: List<Messages>
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            @Composable
-            fun MessageCard(message: Messages, currentUser: String) {
-                val isCurrentUser = message.senderId == currentUser
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
-                ) {
-                    if (!isCurrentUser) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Image(
-                                painter = painterResource(R.drawable.ic_launcher_foreground),
-                                contentDescription = "Avatar",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clip(CircleShape)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = message.senderId, fontWeight = FontWeight.Bold)
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                    }
-
-                    Card(
-                        modifier = Modifier.widthIn(max = 300.dp), // Limit the width of the message bubble
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (isCurrentUser) Color(0xFFE0F7FA) else Color(0xFFF0F0F0)
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .padding(16.dp)
-                        ) {
-                            Text(
-                                text = message.message,
-                                modifier = Modifier
-                                    .background(
-                                        color = Color.Transparent, // No need for additional background
-                                        shape = RoundedCornerShape(16.dp)
-                                    )
-                            )
-
-                            Text(
-                                text = message.timestamp,
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                        }
-                    }
-                }
-            }
-
-            @RequiresApi(Build.VERSION_CODES.O)
-            @Composable
-            fun MessageListScreen(navController: NavHostController, messages: List<Messages>, currentUser: String) {
-                val receiversWithLatestMessage = remember { mutableStateMapOf<String, Messages>() }
-                messages.forEach { message ->
-                    val otherUser = if (message.senderId == currentUser) message.receiverId else message.senderId
-                    receiversWithLatestMessage[otherUser] = message
-                }
-
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = { Text("Messages", fontWeight = FontWeight.Bold) },
-                            navigationIcon = {
-                                IconButton(onClick = { navController.popBackStack() }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                                        contentDescription = "Back"
-                                    )
-                                }
-                            }
-                        )
-                    }
-                ) { innerPadding ->
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    ) {
-                        items(receiversWithLatestMessage.toList()) { (receiver, latestMessage) ->
-                            ReceiverItem(receiver, latestMessage.message) {
-                                // Navigate to MessagesScreen with the selected receiver
-                                navController.navigate("messages_screen/$currentUser/$receiver")
-                            }
-                        }
-                    }
+            items(receiversWithLatestMessage.toList()) { (receiver, latestMessage) ->
+                ReceiverItem(receiver, latestMessage.message) {
+                    // Navigate to MessagesScreen with the selected receiver
+                    navController.navigate("chattingview/$currentUser/$receiver")
                 }
             }
         }
@@ -325,7 +103,7 @@ fun ReceiverItem(receiver: String, lastMessage: String, onReceiverClick: () -> U
 @Preview(showBackground = true)
 @Composable
 fun MessageListScreenPreview() {
-    MessageListScreen(
+    MessagesScreen(
         navController = rememberNavController(),
         messages = listOf(
             Messages("user1", "user2", "Hello", "10:00 AM"),
