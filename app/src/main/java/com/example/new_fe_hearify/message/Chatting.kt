@@ -2,7 +2,9 @@ package com.example.new_fe_hearify.message
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,9 +22,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.R
 import com.example.new_fe_hearify.data.ChatMessage
 import com.example.new_fe_hearify.ktorClient.ktorClient
@@ -45,20 +49,14 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import io.ktor.websocket.send
 
-data class Messages(
-    val senderId: String,
-    val receiverId: String,
-    val message: String,
-    val timestamp: String,
-)
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ChattingScreen(
     navController: NavHostController,
-    currentUserId: Int, // Nhận currentUserId từ bên ngoài
-    receiverId: Int, // Nhận receiverId từ bên ngoài
+    currentUserId: Int,
+    receiverId: Int,
     receiverName: String
 ) {
     val context = LocalContext.current
@@ -69,30 +67,73 @@ fun ChattingScreen(
     // Lấy JWT từ SharedPreferences
     val jwt = getJwtFromSharedPreferences(context)
 
-
     LaunchedEffect(key1 = Unit) {
         if (jwt != null) {
             initWebSocketConnection(currentUserId, receiverId, jwt, coroutineScope, messageList)
         }
     }
 
-
     Column(modifier = Modifier.fillMaxSize()) {
         // Top Bar
         ChatTopAppBar(receiverName, navController)
 
         // Messages
-        MessageList(messageList, currentUserId)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(16.dp)
+        ) {
+            items(messageList) { message ->
+                MessageCard(message, currentUserId)
+            }
+        }
 
         // Input Area
-        MessageInput(inputText) { newInputText ->
-            inputText = newInputText
-        }
-        SendMessageButton(inputText, currentUserId, receiverId, coroutineScope) {
-            inputText = ""
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { /* Handle image attachment */ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "Attach Image"
+                )
+            }
+            TextField(
+                value = inputText,
+                onValueChange = { inputText = it },
+                placeholder = { Text("Type your message") },
+                modifier = Modifier.weight(1f)
+            )
+            IconButton(onClick = {
+                if (inputText.isNotBlank()) {
+                    val newMessage = ChatMessage(
+                        senderId = currentUserId,
+                        receiverId = receiverId,
+                        content = inputText,
+                        timestamp = System.currentTimeMillis() // Add timestamp to the message
+                    )
+                    coroutineScope.launch {
+                        // Gửi tin nhắn qua WebSocket
+                        ktorClient.webSocketSession().send(Json.encodeToString(newMessage))
+                        // Add the message to the list after successful send
+                        messageList.add(newMessage)
+                    }
+                    inputText = ""
+                }
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "Send Message"
+                )
+            }
         }
     }
 }
+
 
 // Hàm lấy JWT từ SharedPreferences
 private fun getJwtFromSharedPreferences(context: Context): String? {
@@ -111,8 +152,8 @@ private suspend fun initWebSocketConnection(
     try {
         ktorClient.webSocket(
             method = HttpMethod.Get,
-            host = "127.0.0.1",
-            port = 8080,
+            host = "127.0.0.1", // Thay thế bằng host của bạn
+            port = 8080, // Thay thế bằng port của bạn
             path = "/messages/connect",
             request = {
                 header("Authorization", "Bearer $jwt")
@@ -145,7 +186,7 @@ private suspend fun fetchChatHistory(
     receiverId: Int,
     messageList: MutableList<ChatMessage>
 ) {
-    val history = ktorClient.get("http://10.0.2.2:8080/messages/history") {
+    val history = ktorClient.get("http://10.0.2.2:8080/messages/history") { // Thay thế bằng URL của bạn
         parameter("senderId", currentUserId)
         parameter("receiverId", receiverId)
     }.body<List<ChatMessage>>()
@@ -169,85 +210,16 @@ private fun ChatTopAppBar(receiverName: String, navController: NavHostController
     )
 }
 
-// Composable cho danh sách tin nhắn
-@Composable
-private fun MessageList(messageList: List<ChatMessage>, currentUserId: Int) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            //.weight(,true)// Sửa lỗi tại đây
-            .padding(16.dp)
-    ) {
-        items(messageList) { message ->
-            MessageCard(message, currentUserId)
-        }
-    }
-}
 
-// Composable cho ô nhập tin nhắn
 @Composable
-private fun MessageInput(inputText: String, onInputChange: (String) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = { /* Handle image attachment */ }) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "Attach Image"
-            )
-        }
-        TextField(
-            value = inputText,
-            onValueChange = { onInputChange(it) },
-            placeholder = { Text("Type your message") },
-            modifier = Modifier.weight(1f)
-        )
-    }
-}
-
-// Composable cho nút gửi tin nhắn
-@Composable
-private fun SendMessageButton(
-    inputText: String,
-    currentUserId: Int,
-    receiverId: Int,
-    coroutineScope: CoroutineScope,
-    onSendClick: () -> Unit
-) {
-    IconButton(onClick = {
-        if (inputText.isNotBlank()) {
-            val newMessage = ChatMessage(
-                senderId = currentUserId,
-                receiverId = receiverId,
-                content = inputText
-            )
-            coroutineScope.launch {
-                // Gửi tin nhắn qua WebSocket
-                ktorClient.webSocketSession().send(Json.encodeToString(newMessage))
-            }
-            onSendClick()
-        }
-    }) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = "Send Message"
-        )
-    }
-}
-
-// Composable cho MessageCard
-@Composable
-fun MessageCard(message: ChatMessage, currentUserId: Int) { // Thay đổi currentUser thành Int
+fun MessageCard(message: ChatMessage, currentUserId: Int) {
     val isCurrentUser = message.senderId == currentUserId
 
     // Format timestamp
     val formattedTimestamp = LocalDateTime.ofInstant(
-        Instant.ofEpochMilli(message.timestamp), // Chuyển đổi timestamp từ Long sang LocalDateTime
+        Instant.ofEpochMilli(message.timestamp),
         ZoneId.systemDefault()
-    ).format(DateTimeFormatter.ofPattern("hh:mm a")) // Format LocalDateTime sang String
+    ).format(DateTimeFormatter.ofPattern("hh:mm a"))
 
     Row(
         modifier = Modifier
@@ -268,7 +240,7 @@ fun MessageCard(message: ChatMessage, currentUserId: Int) { // Thay đổi curre
 
         Column {
             Text(
-                text = message.content, // Sử dụng message.content để hiển thị nội dung tin nhắn
+                text = message.content,
                 modifier = Modifier
                     .background(
                         color = if (isCurrentUser) colorResource(R.color.container_background) else colorResource(
@@ -280,10 +252,22 @@ fun MessageCard(message: ChatMessage, currentUserId: Int) { // Thay đổi curre
             )
 
             Text(
-                text = formattedTimestamp, // Hiển thị formattedTimestamp
+                text = formattedTimestamp,
                 fontSize = 12.sp,
                 color = Color.Gray
             )
         }
     }
 }
+
+//@RequiresApi(Build.VERSION_CODES.O)
+//@Preview(showBackground = true)
+//@Composable
+//fun ChattingScreenPreview() {
+//    ChattingScreen(
+//        navController = rememberNavController(),
+//        currentUserId = 1,
+//        receiverId = 2,
+//        receiverName = "John Doe"
+//    )
+//}
