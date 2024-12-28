@@ -48,6 +48,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 
 
 @Serializable
@@ -92,6 +94,7 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
             onValueChange = {password = it}
         )
         val coroutineScope = rememberCoroutineScope()
+        val context = LocalContext.current
         LoginButton(
             text = "Login",
             modifier = Modifier.padding(16.dp),
@@ -116,7 +119,18 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
 
                         // success
                         println("Login successful! Token: ${response.token}")
-                        navController.navigate("dashboard") // nav to dashboard
+                        println("Login successful! UserId: ${response.userId}")
+
+                        //luu jwt va userId
+                        val sharedPreferences = context.getSharedPreferences("user_data", Context.MODE_PRIVATE) // Sử dụng context
+                        val editor = sharedPreferences.edit()
+                        editor.putString("jwt", response.token)
+                        editor.putInt("userId", response.userId)
+                        editor.apply()
+
+
+
+                        navController.navigate("messagelistview/${response.userId}") // nav to dashboard
                     } catch (e: Exception) {
                         println("Login failed: ${e.message}")
                     }

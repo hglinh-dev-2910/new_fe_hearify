@@ -27,24 +27,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.R
+import com.example.new_fe_hearify.data.ChatMessage
+import com.example.new_fe_hearify.data.Conversation
+import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
 
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MessagesScreen(navController: NavHostController, messages: List<Messages>, currentUser: String) {
-    val receiversWithLatestMessage = remember { mutableStateMapOf<String, Messages>() }
-    messages.forEach { message ->
-        val otherUser = if (message.senderId == currentUser) message.receiverId else message.senderId
-        receiversWithLatestMessage[otherUser] = message
-    }
-
+// ... (Các import cần thiết)
+fun MessagesScreen(
+    navController: NavHostController,
+    messages: List<Conversation>,
+    currentUserId: Int
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,16 +58,15 @@ fun MessagesScreen(navController: NavHostController, messages: List<Messages>, c
                 }
             )
         }
-    ) { innerPadding ->
+    )  { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            items(receiversWithLatestMessage.toList()) { (receiver, latestMessage) ->
-                ReceiverItem(receiver, latestMessage.message) {
-                    // Navigate to MessagesScreen with the selected receiver
-                    navController.navigate("chattingview/$currentUser/$receiver")
+            items(messages) { conversation ->
+                ReceiverItem(conversation.receiverId, conversation.lastMessage) {
+                    navController.navigate("chattingview/$currentUserId/${conversation.receiverId}")
                 }
             }
         }
@@ -76,7 +74,7 @@ fun MessagesScreen(navController: NavHostController, messages: List<Messages>, c
 }
 
 @Composable
-fun ReceiverItem(receiver: String, lastMessage: String, onReceiverClick: () -> Unit) {
+fun ReceiverItem(receiverId: Int, lastMessage: String, onReceiverClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,24 +91,9 @@ fun ReceiverItem(receiver: String, lastMessage: String, onReceiverClick: () -> U
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
-            Text(text = receiver, fontWeight = FontWeight.Bold)
+            Text(text = receiverId.toString(), fontWeight = FontWeight.Bold)
             Text(text = lastMessage, fontSize = 12.sp, color = Color.Gray)
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun MessageListScreenPreview() {
-    MessagesScreen(
-        navController = rememberNavController(),
-        messages = listOf(
-            Messages("user1", "user2", "Hello", "10:00 AM"),
-            Messages("user2", "user1", "Hi", "10:01 AM"),
-            Messages("user3", "user2", "Hey", "11:00 AM"),
-            Messages("user1", "user2", "How are you?", "11:30 AM") // Latest message from user1
-        ),
-        currentUser = "user2"
-    )
-}

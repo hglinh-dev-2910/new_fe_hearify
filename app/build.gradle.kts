@@ -67,6 +67,11 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.websockets)
     implementation(libs.jwtdecode)
+    implementation(libs.ui)
+    implementation(libs.material)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.ktor.client.websocket)
+    implementation(libs.ktor.server.websockets)
 
 
 

@@ -26,7 +26,7 @@ data class ChatMessage(
     val id: Int = 0,
     val senderId: Int,
     val receiverId: Int,
-    val content: String? = null, // handle null
+    val content: String,
     val timestamp: Long = Instant.now().toEpochMilli(),
     val isRead: Boolean = false,
     val status: String = "pending" //default
@@ -36,6 +36,13 @@ data class ChatMessage(
 data class ReadMessage(
     val action: String,
     val messageIds: List<Int>
+)
+
+@Serializable
+data class Conversation(
+    val receiverId: Int,
+    val lastMessage: String,
+    val timestamp: Long
 )
 
 @Serializable

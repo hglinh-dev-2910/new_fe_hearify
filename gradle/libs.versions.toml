@@ -30,6 +30,11 @@ kotlinxSerializationJsonVersion = "1.8.0-RC"
 ktorClientCore = "3.0.3"
 ktorClientWebsockets = "3.0.3"
 jwtdecode = "2.0.2"
+ui = "1.7.6"
+materialVersion = "1.7.6"
+uiToolingPreview = "1.7.6"
+ktorClientWebsocket = "1.1.4"
+ktorServerWebsockets = "3.0.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -68,6 +73,11 @@ jetbrains-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name =
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktorClientCore" }
 ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref = "ktorClientWebsockets" }
 jwtdecode = { group = "com.auth0.android", name = "jwtdecode", version.ref = "jwtdecode" }
+ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+material = { group = "androidx.compose.material", name = "material", version.ref = "materialVersion" }
+ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "uiToolingPreview" }
+ktor-client-websocket = { group = "io.ktor", name = "ktor-client-websocket", version.ref = "ktorClientWebsocket" }
+ktor-server-websockets = { group = "io.ktor", name = "ktor-server-websockets", version.ref = "ktorServerWebsockets" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
