@@ -50,7 +50,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import android.content.Context
 import androidx.compose.ui.platform.LocalContext
-
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Serializable
 data class LoginResponse(
@@ -214,10 +215,12 @@ fun InputField(
             unfocusedContainerColor = colorResource(id = R.color.unfocused_container_background), // Replace with your actual color resource
             focusedContainerColor = colorResource(id = R.color.container_background) // Replace with your actual color resource
         ),
+
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = if (isPassword) ImeAction.Done else ImeAction.Next
         ),
-        keyboardActions = KeyboardActions.Default
+        keyboardActions = KeyboardActions.Default,
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
     )
 }
 
