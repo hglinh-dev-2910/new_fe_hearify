@@ -130,7 +130,7 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
 
 
 
-                        navController.navigate("messagelistview/${response.userId}") // nav to dashboard
+                        navController.navigate("dashboard") // nav to dashboard
                     } catch (e: Exception) {
                         println("Login failed: ${e.message}")
                     }

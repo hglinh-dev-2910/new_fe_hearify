@@ -57,7 +57,10 @@ class MainActivity : ComponentActivity() {
                         RegistrationScreen(Modifier, navController)
                     }
                     composable("dashboard") {
-                        DashboardScreen()
+                        DashboardScreen(
+                            navController = navController,
+
+                        )
                     }
                     // Add this composable route for the MessageListScreen
                     composable("messagelistview/{currentUserId}") { backStackEntry ->

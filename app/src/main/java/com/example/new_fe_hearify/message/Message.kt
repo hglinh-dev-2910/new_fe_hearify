@@ -1,6 +1,5 @@
 package com.example.new_fe_hearify.message
 
-import com.example.new_fe_hearify.message.Messages
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -30,6 +29,7 @@ import com.example.new_fe_hearify.R
 import com.example.new_fe_hearify.data.ChatMessage
 import com.example.new_fe_hearify.data.Conversation
 import kotlinx.serialization.Serializable
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -37,13 +37,21 @@ import java.time.format.DateTimeFormatter
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("RestrictedApi")
 @Composable
-// ... (Các import cần thiết)
 fun MessagesScreen(
     navController: NavHostController,
-    messages: List<Conversation>,
+    messages: List<ChatMessage>, // Now takes a list of ChatMessage
     currentUserId: Int
 ) {
+    // Group messages by senderId
+    val groupedMessages = messages.groupBy { it.senderId }
+
+    // Get the latest message for each sender
+    val latestMessages = groupedMessages.map { (_, messages) ->
+        messages.maxByOrNull { it.timestamp }
+    }.filterNotNull()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,20 +66,21 @@ fun MessagesScreen(
                 }
             )
         }
-    )  { innerPadding ->
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            items(messages) { conversation ->
-                ReceiverItem(conversation.receiverId, conversation.lastMessage) {
-                    navController.navigate("chattingview/$currentUserId/${conversation.receiverId}")
+            items(latestMessages) { message -> // Use latestMessages here
+                ReceiverItem(message.senderId, message.content) {
+                    navController.navigate("chattingview/$currentUserId/${message.senderId}")
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun ReceiverItem(receiverId: Int, lastMessage: String, onReceiverClick: () -> Unit) {
@@ -97,3 +106,15 @@ fun ReceiverItem(receiverId: Int, lastMessage: String, onReceiverClick: () -> Un
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun MessagesScreenPreview() {
+    val navController = rememberNavController()
+    val messages = listOf(
+        ChatMessage(1, 123, 1, "Hello", Instant.now().toEpochMilli()),
+        ChatMessage(2, 456, 1, "How are you?", Instant.now().toEpochMilli()),
+        ChatMessage(3, 789, 1, "What's up?", Instant.now().toEpochMilli()),
+        ChatMessage(4, 123, 1, "This is another message from 123", Instant.now().toEpochMilli() + 1000)
+    )
+    MessagesScreen(navController, messages, 1)
+}

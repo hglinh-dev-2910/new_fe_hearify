@@ -271,3 +271,16 @@ fun MessageCard(message: ChatMessage, currentUserId: Int) {
 //        receiverName = "John Doe"
 //    )
 //}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun ChattingScreenPreview() {
+
+    ChattingScreen(
+        navController = rememberNavController(),
+        currentUserId = 1,
+        receiverId = 2,
+        receiverName = "John Doe"
+    )
+}

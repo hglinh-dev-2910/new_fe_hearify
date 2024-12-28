@@ -1,38 +1,46 @@
 package com.example.new_fe_hearify.dashboard
 
-
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.BottomAppBar
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.new_fe_hearify.R
 
-//class MainActivity : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            DashboardScreen()
-//        }
-//    }
-//}
+// This function is used for navigation from DashboardScreen to MessageList
+
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(
+    navController: NavHostController, // Receive navController as a parameter
+) {
     // Màu nền chủ đạo
     val backgroundColor = Color(0xFFFFF0F5) // Màu hồng nhạt
 
@@ -117,9 +125,16 @@ fun DashboardScreen() {
 
             Spacer(modifier = Modifier.height(8.dp)) // Khoảng cách
 
+            val sharedPreferences =
+                LocalContext.current.getSharedPreferences("user_data", Context.MODE_PRIVATE)
+            val currentUserId = sharedPreferences.getInt("userId", -1)
             // Nút "Danh sách ghép đôi"
             Button(
-                onClick = { /* Xử lý sự kiện */ },
+                onClick = {
+                    navController.navigate(
+                        "messagelistview/$currentUserId"
+                    )
+                }, // Call the lambda function for navigation
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -135,10 +150,4 @@ fun DashboardScreen() {
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    DashboardScreen()
 }
