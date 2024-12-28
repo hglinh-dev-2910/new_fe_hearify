@@ -4,6 +4,7 @@ package com.example.new_fe_hearify
 //import com.example.new_fe_hearify.message.MessageListScreen
 import android.content.Context
 import android.os.Bundle
+import android.os.Message
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.new_fe_hearify.dashboard.DashboardScreen
+import com.example.new_fe_hearify.data.ChatMessage
 import com.example.new_fe_hearify.data.Conversation
 import com.example.new_fe_hearify.introView.Intro1Screen
 import com.example.new_fe_hearify.introView.Intro34Screen
@@ -66,7 +68,7 @@ class MainActivity : ComponentActivity() {
                     composable("messagelistview/{currentUserId}") { backStackEntry ->
                         val currentUserId = backStackEntry.arguments?.getString("currentUserId")?.toIntOrNull() ?: -1
 
-                        var messages by remember { mutableStateOf<List<Conversation>>(emptyList()) }
+                        var messages by remember { mutableStateOf<List<ChatMessage>>(emptyList()) }
 
                         // Lấy JWT từ SharedPreferences (thay vì hardcode)
                         val context = LocalContext.current
