@@ -99,7 +99,7 @@ fun Login2Screen(modifier: Modifier = Modifier, navController: NavHostController
                 coroutineScope.launch {
                     // Kiểm tra giá trị email và password
                     if (username.isBlank() || password.isBlank()) {
-                        println("Email and password cannot be empty!")
+                        println("Username and password cannot be empty!")
                         return@launch
                     }
 
